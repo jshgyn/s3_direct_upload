@@ -50,7 +50,12 @@ $.fn.S3Uploader = (options) ->
           current_files.push data
           if $('#template-upload').length > 0
             data.context = $($.trim(tmpl("template-upload", file)))
-            $(data.context).appendTo(settings.progress_bar_target || $uploadForm)
+            node = $(data.context).appendTo(settings.progress_bar_target || $uploadForm)
+            node.find('.cancel').click (e) ->
+              e.preventDefault()
+              if confirm('Are you sure you want to cancel this upload?')
+                jqXHR.abort()
+                node.remove()
           else if !settings.allow_multiple_files
             data.context = settings.progress_bar_target
           if settings.click_submit_target
